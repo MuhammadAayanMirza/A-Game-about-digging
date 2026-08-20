@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/playerMovements.cs" />
+    <Compile Include="Assets/Scripts/Digging.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
