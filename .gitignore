@@ -1,0 +1,63 @@
+# ==========================================
+# MAC OPERATING SYSTEM CLEANUP
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.Spotlight-V100
+.Trashes
+
+# ==========================================
+# CODE & DEPENDENCY FOLDERS (Massive File Counts)
+# ==========================================
+node_modules/
+bower_components/
+jspm_packages/
+.npm/
+venv/
+.venv/
+env/
+.env
+bin/
+obj/
+
+# ==========================================
+# GAME ENGINE CACHES (Unity & Unreal Engine)
+# ==========================================
+Library/
+Temp/
+Obj/
+Logs/
+MemoryCaptures/
+Build/
+Builds/
+Artifacts/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# ==========================================
+# TEXT EDITOR & IDE CONFIGURATIONS
+# ==========================================
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ==========================================
+# HEAVY MEDIA & LOGS (Blocks 50MB+ Upload Errors)
+# ==========================================
+*.log
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+*.mp4
+*.mov
+*.avi
+*.mkv
