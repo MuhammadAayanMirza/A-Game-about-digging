@@ -45,13 +45,13 @@ TagManager:
     uniqueID: 230938953
     locked: 0
   - name: Ground
+    uniqueID: 992610233
+    locked: 0
+  - name: House
     uniqueID: 3154906395
     locked: 0
   - name: Player
     uniqueID: 846380331
-    locked: 0
-  - name: New Layer 4
-    uniqueID: 992610233
     locked: 0
   m_RenderingLayers:
   - Default
