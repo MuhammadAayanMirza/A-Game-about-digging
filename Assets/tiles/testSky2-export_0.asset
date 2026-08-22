@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GroundTiles_15
+  m_Name: testSky2-export_0
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: -267676461, guid: 4b930d0511e2e46ba8da6acde22ea87f, type: 3}
+  m_Sprite: {fileID: -7394374049447660039, guid: 7eb76dcc858d04b3980ac8525f6adf1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

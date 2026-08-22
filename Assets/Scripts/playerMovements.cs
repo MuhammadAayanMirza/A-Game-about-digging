@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,11 +8,32 @@ public class playerMovements : MonoBehaviour
 
    private Rigidbody2D rb;
 
+   private float originalGravity;
+   [SerializeField] private float modifiedGravity = 0f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        originalGravity = rb.gravityScale;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "Trigger")
+        {
+            rb.gravityScale = modifiedGravity;
+
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "Trigger")
+        {
+            rb.gravityScale = originalGravity;
+        }
+    }
     void FixedUpdate()
     {
         Vector2 movement = Vector2.zero;
