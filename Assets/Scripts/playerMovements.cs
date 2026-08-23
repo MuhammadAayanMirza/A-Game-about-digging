@@ -1,16 +1,21 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class playerMovements : MonoBehaviour
 {
    public float moveSpeed = 6f;
+   public float upMoveSpeed = 6f;
 
    private Rigidbody2D rb;
 
    private float originalGravity;
    [SerializeField] private float modifiedGravity = 0f;
 
+    
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -25,6 +30,7 @@ public class playerMovements : MonoBehaviour
 
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -34,11 +40,13 @@ public class playerMovements : MonoBehaviour
             rb.gravityScale = originalGravity;
         }
     }
+
+
     void FixedUpdate()
     {
         Vector2 movement = Vector2.zero;
 
-        if(Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
+        if(Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed || Keyboard.current.spaceKey.isPressed)
             movement.y += 1;
         
         if(Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
@@ -52,9 +60,12 @@ public class playerMovements : MonoBehaviour
 
         movement = movement.normalized;
 
-        rb.linearVelocity = movement * moveSpeed;
+        float finalXSpeed = movement.x * moveSpeed;
+        float finalYSpeed = movement.y > 0 ? movement.y * upMoveSpeed : movement.y * moveSpeed;
+
+        rb.linearVelocity = new Vector2(finalXSpeed, finalYSpeed);
+
+       
 
     }
-
-
-}
+    }
