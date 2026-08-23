@@ -13,6 +13,7 @@ public class playerMovements : MonoBehaviour
 
    private float originalGravity;
    [SerializeField] private float modifiedGravity = 0f;
+   [SerializeField] private Animator _animator;
 
     
     
@@ -27,8 +28,8 @@ public class playerMovements : MonoBehaviour
         if (collision.gameObject.name == "Trigger")
         {
             rb.gravityScale = modifiedGravity;
-
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, upMoveSpeed);
+            
         }
 
     }
@@ -60,11 +61,17 @@ public class playerMovements : MonoBehaviour
 
         movement = movement.normalized;
 
-        float finalXSpeed = movement.x * moveSpeed;
-        float finalYSpeed = movement.y > 0 ? movement.y * upMoveSpeed : movement.y * moveSpeed;
-
-        rb.linearVelocity = new Vector2(finalXSpeed, finalYSpeed);
-
+        movement = movement * moveSpeed;
+        
+        rb.linearVelocity = new Vector2(movement.x * moveSpeed , movement.y * moveSpeed);
+        if (movement.x != 0)
+        {
+            _animator.SetBool("Walking", true);
+        }
+        else
+        {
+            _animator.SetBool("Walking", false);
+        }
        
 
     }
