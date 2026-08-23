@@ -67,6 +67,9 @@ public class playerMovements : MonoBehaviour
         if (movement.x != 0)
         {
             _animator.SetBool("Walking", true);
+
+            float facingDirection = Mathf.Sign(movement.x) * 3.66f ;
+            transform.localScale = new Vector3(facingDirection, 3.66f, 1f);
         }
         else
         {
