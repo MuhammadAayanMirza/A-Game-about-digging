@@ -2,21 +2,24 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
-
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 public class Digging : MonoBehaviour
 {
     public Tilemap groundTilemap;
+    public Tilemap coalTilemap;
     public float digRange = 2.5f;
 
     public Animator animator;
 
     public SpriteRenderer spriteRenderer;
+    private PlayerInventory playerInventory;
 
     [Header ("Shovel Toggle") ]
     public GameObject ShovelItem;
 
     [Header ("Upgrade Settings")]
-    [Tooltip("1 = 1x1, 2 = 2x2, 3 = 3x3, 4 = 4x4 cube")]
+    [Tooltip("1 = 1 tile, 2 = 2 tiles, 3 = 3 tiles, 4 = 4 tiles")]
     [Range(1,4)] public int digSizeLevel = 1;
     public bool IsDigging { get; private set; }
 
@@ -25,6 +28,8 @@ public class Digging : MonoBehaviour
     void Start()
     {
         startingPos = transform.localScale;
+
+        playerInventory = GetComponent<PlayerInventory>();
     }
 
     void FaceDirection(Vector3 tileCenter)
@@ -52,6 +57,14 @@ public class Digging : MonoBehaviour
         }
     }
 
+    bool IsValidTile(Vector3Int cell)
+    {
+        bool hasGround = (groundTilemap != null && groundTilemap.HasTile(cell));
+        bool hasCoal = (coalTilemap != null && coalTilemap.HasTile(cell));
+        return hasGround || hasCoal;
+
+    }
+
     void Dig()
     {
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(
@@ -64,7 +77,7 @@ public class Digging : MonoBehaviour
     Vector3 tileCenter = groundTilemap.GetCellCenterWorld(cellPosition);
     float distance = Vector2.Distance(transform.position, tileCenter);
 
-    if (distance <= digRange && groundTilemap.HasTile(cellPosition))
+    if (distance <= digRange && IsValidTile(cellPosition))
         {
 
             IsDigging = true;
@@ -108,57 +121,50 @@ public class Digging : MonoBehaviour
 
         if (digSizeLevel == 1)
         {
-            groundTilemap.SetTile(centerCell, null);
-            return;
+           BreakSingleTile(centerCell);
+           if (GameManager.Instance != null) GameManager.Instance.UpdateUI();
+           return;
         }
 
-        int minOffset = 0;
-        int maxOffset = 0;
+        List<Vector3Int> validNearbyCells = new List<Vector3Int>();
 
-        switch (digSizeLevel)
+        for (int x = -2; x <= 2; x++)
         {
-        case 2:
-
-            minOffset = 0;
-            maxOffset = 1;
-            break;
-        
-        case 3:
-
-            minOffset = -1;
-            maxOffset = 1;
-            break;
-
-        case 4:
-
-            minOffset = -1;
-            maxOffset = 2;
-            break;
-        }
-    
-    for (int x = minOffset; x <= maxOffset; x++)
-        {
-          for (int y = minOffset; y <= maxOffset; y++)
+            for(int y = -2; y <= 2; y++)
             {
-                Vector3Int currentCell = new Vector3Int(centerCell.x + x, centerCell.y + y, centerCell.z);
-
-                if (groundTilemap.HasTile(currentCell))
+                Vector3Int scanCell = new Vector3Int(centerCell.x + x, centerCell.y + y, centerCell.z);
+                if (IsValidTile(scanCell))
                 {
-                    groundTilemap.SetTile(currentCell, null);
+                    validNearbyCells.Add(scanCell);
+                    
                 }
-            } 
+            }
         }
-    }
+            validNearbyCells.Sort((a,b) =>
+            Vector3Int.Distance(a, centerCell).CompareTo(Vector3Int.Distance(b,centerCell))
+            );
 
-    public void UpgradeDigSize()
-    {
-        digSizeLevel++;
+            int tilesToBreakCount = Mathf.Min(digSizeLevel, validNearbyCells.Count);
 
-        if (digSizeLevel > 4)
+            for(int i = 0; i < tilesToBreakCount; i++)
         {
-            digSizeLevel = 1;
+            BreakSingleTile(validNearbyCells[i]);
         }
 
-        Debug.Log("Shovel Power Upgraded! Current Size Level: " + digSizeLevel);
+        if (GameManager.Instance != null) GameManager.Instance.UpdateUI();
+     }
+
+    private void BreakSingleTile(Vector3Int cell)
+    {
+        if (coalTilemap != null && coalTilemap.HasTile(cell))
+        {
+            coalTilemap.SetTile(cell, null);
+            if (playerInventory != null) playerInventory.AddCoal(1);
+        }
+        if (groundTilemap != null && groundTilemap.HasTile(cell))
+        {
+            groundTilemap.SetTile(cell, null);
+        }
     }
+
 }

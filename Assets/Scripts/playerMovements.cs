@@ -43,7 +43,7 @@ public class playerMovements : MonoBehaviour
     }
 
 
-    void FixedUpdate()
+      void FixedUpdate()
     {
         Vector2 movement = Vector2.zero;
 
@@ -78,4 +78,4 @@ public class playerMovements : MonoBehaviour
        
 
     }
-    }
+}
