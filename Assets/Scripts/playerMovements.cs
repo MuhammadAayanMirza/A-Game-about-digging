@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,13 +8,23 @@ using UnityEngine.InputSystem;
 public class playerMovements : MonoBehaviour
 {
    public float moveSpeed = 6f;
-   public float upMoveSpeed = 6f;
+
+    [Header("Jetpack Settings")]
+   public float baseUpMoveSpeed = 6f;
+   public float speedBonusPerLevel = 2f;
+   public int jetpackLevel = 1;
 
    private Rigidbody2D rb;
-
    private float originalGravity;
-   [SerializeField] private float modifiedGravity = 0f;
+   [SerializeField] private float jetpackGravity = 0f;
+   [SerializeField] private float cobbleGravity = 0f;
+   [SerializeField] private float triggerGravity = 20f;
    [SerializeField] private Animator _animator;
+
+   private bool isInJetpackZone = false;
+   private bool isInCobbleZone = false;
+   private bool isHoldingUpKey = false;
+   private Vector2 inputMovement = Vector2.zero;
 
     
     
@@ -23,59 +34,111 @@ public class playerMovements : MonoBehaviour
         originalGravity = rb.gravityScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.name == "Trigger")
         {
-            rb.gravityScale = modifiedGravity;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, upMoveSpeed);
+            isInJetpackZone = true;
+        }
+
+        if (collision.gameObject.name == "Cobblestone")
+        {
+            isInCobbleZone = true;
             
         }
 
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+
+
+      void Update()
     {
-        if (collision.gameObject.name == "Trigger")
-        {
-            rb.gravityScale = originalGravity;
-        }
-    }
+        inputMovement = Vector2.zero;
 
 
-      void FixedUpdate()
-    {
-        Vector2 movement = Vector2.zero;
-
-        if(Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed || Keyboard.current.spaceKey.isPressed)
-            movement.y += 1;
+        isHoldingUpKey = Keyboard.current.wKey.isPressed || 
+                              Keyboard.current.upArrowKey.isPressed || 
+                              Keyboard.current.spaceKey.isPressed;
+        
+        if (isHoldingUpKey)
+            inputMovement.y += 1;
         
         if(Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
-            movement.y -= 1;
+            inputMovement.y -= 1;
 
         if(Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-            movement.x += 1;
+            inputMovement.x += 1;
 
         if(Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-            movement.x -= 1;
+            inputMovement.x -= 1;
 
-        movement = movement.normalized;
+        inputMovement = inputMovement.normalized;
+    }
 
-        movement = movement * moveSpeed;
+    void FixedUpdate()
+    {
         
-        rb.linearVelocity = new Vector2(movement.x * moveSpeed , movement.y * moveSpeed);
-        if (movement.x != 0)
+    
+    float currentXVelocity = inputMovement.x * moveSpeed;
+        float currentYVelocity = inputMovement.y * moveSpeed;
+
+        bool jetpackIsActive = isInJetpackZone && isHoldingUpKey; 
+        if (jetpackIsActive)
+    
+        {
+            rb.gravityScale = jetpackGravity;
+
+            float upgradedUpSpeed = baseUpMoveSpeed + ((jetpackLevel -1 ) * speedBonusPerLevel);
+
+            currentYVelocity = upgradedUpSpeed;
+
+        }
+        else if (isInJetpackZone)
+        {
+            rb.gravityScale = triggerGravity;
+        }
+
+        else if (isInCobbleZone)
+        {
+            rb.gravityScale = cobbleGravity;
+        }
+            else
+            {
+                rb.gravityScale = originalGravity;
+            }
+
+        _animator.SetBool("Jetpack", jetpackIsActive);
+
+        rb.linearVelocity = new Vector2(currentXVelocity, currentYVelocity);
+
+        isInJetpackZone = false;
+        isInCobbleZone = false;
+
+       
+
+        if (inputMovement.x != 0)
         {
             _animator.SetBool("Walking", true);
 
-            float facingDirection = Mathf.Sign(movement.x) * 3.66f ;
+            float facingDirection = Mathf.Sign(inputMovement.x) * 3.66f ;
             transform.localScale = new Vector3(facingDirection, 3.66f, 1f);
         }
         else
         {
             _animator.SetBool("Walking", false);
         }
-       
+      }
 
+      public void UpgradeJetpack()
+    {
+        if (jetpackLevel >= 4)
+        {
+            Debug.Log(" Jetpack Max ");
+            return;
+        }
+
+
+        jetpackLevel++;
+        Debug.Log("Jetpack Upgraded to Level: " + jetpackLevel);
     }
 }

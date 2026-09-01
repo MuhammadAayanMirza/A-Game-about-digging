@@ -14,12 +14,18 @@ public class GameManager : MonoBehaviour
     public int coinValuePerCoal = 10;
     public int[] upgradeCosts = { 0, 10, 100, 300};
 
+    public int [] jetpackUpgradeCosts = {0, 10, 100, 300};
+
     [Header("UI Text References")]
     public TextMeshProUGUI coalText;
     public TextMeshProUGUI coinsText;
+    [Header("Shovel UI References")]
     public TextMeshProUGUI shovelLevelText;
     public TextMeshProUGUI upgradeCostText;
 
+    [Header("Jetpack UI References")]
+    public TextMeshProUGUI jetpackLevelText;
+    public TextMeshProUGUI jetpackCostText;
     [Header("Progress Bar")]
 
     public Image FirstProgress;
@@ -28,8 +34,11 @@ public class GameManager : MonoBehaviour
     public Image ThirdProgress;
     public Image FourthProgress;
 
+    
+
     private PlayerInventory playerInventory;
     private Digging playerDigging;
+    private playerMovements playerMove;
 
 
 
@@ -52,6 +61,7 @@ public class GameManager : MonoBehaviour
         {
             playerInventory = player.GetComponent<PlayerInventory>();
             playerDigging = player.GetComponent<Digging>();
+            playerMove = player.GetComponent<playerMovements>();
         }
 
         UpdateUI();
@@ -77,6 +87,22 @@ public class GameManager : MonoBehaviour
             {
                 int nextLevelCost = upgradeCosts[playerDigging.digSizeLevel];
                 upgradeCostText.text = nextLevelCost + "M";
+            }
+        }
+
+        if (jetpackLevelText != null)
+            jetpackLevelText.text = "Jetpack Level: " + playerMove.jetpackLevel;
+
+        if (jetpackCostText != null)
+        {
+            if (playerMove.jetpackLevel >= 4)
+            {
+                jetpackCostText.text = "Max";
+            }
+            else
+            {
+                int nextJetpackCost = jetpackUpgradeCosts[playerMove.jetpackLevel];
+                jetpackCostText.text = nextJetpackCost + "M";
             }
         }
 
@@ -127,6 +153,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ShopBuyJetpackUpgrade()
+    {
+        if (playerInventory == null || playerMove == null) return;
+
+        int currentLevel = playerMove.jetpackLevel;
+        if (currentLevel >= 4) return;
+
+        int costOfNextUpgrade = jetpackUpgradeCosts[currentLevel];
+
+        if (playerInventory.SpendCoins(costOfNextUpgrade))
+        {
+            playerMove.UpgradeJetpack();
+            UpdateUI();
+        }
+    }
+    
 
 
 
