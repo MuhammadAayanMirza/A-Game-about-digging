@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class playerMovements : MonoBehaviour
 {
@@ -14,6 +15,13 @@ public class playerMovements : MonoBehaviour
    public float speedBonusPerLevel = 2f;
    public int jetpackLevel = 1;
 
+   [Header ("Battery Settings")]
+   public float maxBattery = 10f;
+   public float batteryDrainRate = 1f;
+   public int batteryLevel = 1;
+   public float batteryBonusPerLevel = 5f;
+   public float currentBattery;
+
    private Rigidbody2D rb;
    private float originalGravity;
    [SerializeField] private float jetpackGravity = 0f;
@@ -21,17 +29,29 @@ public class playerMovements : MonoBehaviour
    [SerializeField] private float triggerGravity = 20f;
    [SerializeField] private Animator _animator;
 
+   [SerializeField] private GameObject DeathScreen;
+
    private bool isInJetpackZone = false;
    private bool isInCobbleZone = false;
    private bool isHoldingUpKey = false;
    private Vector2 inputMovement = Vector2.zero;
+   private Vector3 startingPositon;
 
-    
+   private bool isDead = false;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         originalGravity = rb.gravityScale;
+
+        startingPositon = transform.position;
+
+         currentBattery = GetMaxBattery();
+    }
+
+    public float GetMaxBattery()
+    {
+        return maxBattery + ((batteryLevel -1) * batteryBonusPerLevel);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -92,6 +112,20 @@ public class playerMovements : MonoBehaviour
 
             currentYVelocity = upgradedUpSpeed;
 
+            currentBattery -= batteryDrainRate * Time.fixedDeltaTime;
+
+        if(currentBattery <= 0)
+            {
+                currentBattery = 0;
+
+            if (!isDead)
+            {
+                isDead = true;
+                Die();
+            }
+            return;
+            }
+
         }
         else if (isInJetpackZone)
         {
@@ -140,5 +174,55 @@ public class playerMovements : MonoBehaviour
 
         jetpackLevel++;
         Debug.Log("Jetpack Upgraded to Level: " + jetpackLevel);
+    }
+
+    public void Die()
+    {
+        StartCoroutine(DeathSequence());
+    }
+
+    private IEnumerator DeathSequence()
+    {
+        Debug.Log("Jetpack battery peww, dieeee");
+
+        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = originalGravity;
+        
+
+        PlayerInventory inventory = GetComponent<PlayerInventory>();
+
+        if(inventory != null)
+        {
+            inventory.coalCount = 0;
+
+            if(GameManager.Instance != null)
+            {
+            GameManager.Instance.UpdateUI();
+            }
+        }
+
+        _animator.SetBool("Jetpack", false);
+        _animator.SetBool("Walking", false);
+
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+
+        DeathScreen.SetActive(true);
+
+        yield return new WaitForSeconds(4f);
+
+        rb.position = startingPositon;
+        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = originalGravity;
+
+        currentBattery = GetMaxBattery();
+
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+
+        DeathScreen.SetActive(false);
+
+        isDead = false;
+
+        Debug.Log("You are back! Don't Die Now Oloo");
+
     }
 }
