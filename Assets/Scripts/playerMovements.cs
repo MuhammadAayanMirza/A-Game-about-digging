@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using System.Collections;
@@ -30,6 +31,8 @@ public class playerMovements : MonoBehaviour
    [SerializeField] private Animator _animator;
 
    [SerializeField] private GameObject DeathScreen;
+
+   [SerializeField] private Image BatteryBar;
 
    private bool isInJetpackZone = false;
    private bool isInCobbleZone = false;
@@ -93,6 +96,8 @@ public class playerMovements : MonoBehaviour
             inputMovement.x -= 1;
 
         inputMovement = inputMovement.normalized;
+
+        UpdateBatteryUI();
     }
 
     void FixedUpdate()
@@ -175,6 +180,33 @@ public class playerMovements : MonoBehaviour
         jetpackLevel++;
         Debug.Log("Jetpack Upgraded to Level: " + jetpackLevel);
     }
+
+    public void UpgradeBattery()
+    {
+        if (batteryLevel >= 4)
+        {
+            Debug.Log(" Battery Max ");
+            return;
+        }
+
+
+        batteryLevel++;
+        Debug.Log("Battery Upgraded to Level: " + batteryLevel);
+    }
+
+    private void UpdateBatteryUI()
+    {
+        if (BatteryBar == null)
+            return;
+        
+        float maxBattery = GetMaxBattery();
+
+        BatteryBar.fillAmount = currentBattery / maxBattery;
+    }
+
+
+
+
 
     public void Die()
     {

@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public int [] jetpackUpgradeCosts = {0, 10, 100, 300};
 
+    public int [] batteryUpgradeCosts = {0, 30, 100, 300};
+
     [Header("UI Text References")]
     public TextMeshProUGUI coalText;
     public TextMeshProUGUI coinsText;
@@ -26,13 +28,36 @@ public class GameManager : MonoBehaviour
     [Header("Jetpack UI References")]
     public TextMeshProUGUI jetpackLevelText;
     public TextMeshProUGUI jetpackCostText;
-    [Header("Progress Bar")]
+    [Header("Shovel Progress Bar")]
 
     public Image FirstProgress;
     public Image SecondProgress;
 
     public Image ThirdProgress;
     public Image FourthProgress;
+
+    [Header("Jetpack Progress Bar")]
+
+    public Image JetFirstProgress;
+    public Image JetSecondProgress;
+
+    public Image JetThirdProgress;
+    public Image JetFourthProgress;
+
+    [Header("Battery Progress Bar")]
+
+    public Image BatFirstProgress;
+    public Image BatSecondProgress;
+
+    public Image BatThirdProgress;
+    public Image BatFourthProgress;
+
+    [Header("Battery UI References")]
+
+    [Header("Battery UI References")]
+
+    public TextMeshProUGUI batteryLevelText;
+    public TextMeshProUGUI batteryCostText;
 
     
 
@@ -106,6 +131,34 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        if (batteryLevelText != null)
+        jetpackLevelText.text = "Battery Level: " + playerMove.batteryLevel;
+
+        if (batteryCostText != null)
+        {
+            if (playerMove.batteryLevel >= 4)
+            {
+                batteryCostText.text = "Max";
+            }
+            else
+            {
+                int nextBatteryCost = batteryUpgradeCosts[playerMove.batteryLevel];
+                batteryCostText.text = nextBatteryCost + "M";
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         if (playerDigging.digSizeLevel >= 1)
         {
             FirstProgress.gameObject.SetActive(true);
@@ -121,6 +174,40 @@ public class GameManager : MonoBehaviour
         if (playerDigging.digSizeLevel >= 4)
         {
             FourthProgress.gameObject.SetActive(true);
+        }
+
+         if (playerMove.jetpackLevel >= 1)
+        {
+            JetFirstProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.jetpackLevel >= 2)
+        {
+            JetSecondProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.jetpackLevel >= 3)
+        {
+            JetThirdProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.jetpackLevel >= 4)
+        {
+            JetFourthProgress.gameObject.SetActive(true);
+        }
+
+        if (playerMove.batteryLevel >= 1)
+        {
+            BatFirstProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.batteryLevel >= 2)
+        {
+            BatSecondProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.batteryLevel >= 3)
+        {
+            BatThirdProgress.gameObject.SetActive(true);
+        }
+        if (playerMove.batteryLevel >= 4)
+        {
+            BatFourthProgress.gameObject.SetActive(true);
         }
     }
 
@@ -167,6 +254,24 @@ public class GameManager : MonoBehaviour
             playerMove.UpgradeJetpack();
             UpdateUI();
         }
+
+    }
+
+    public void ShopBuyBatteryUpgrade()
+    {
+        if (playerInventory == null || playerMove == null) return;
+
+        int currentLevel = playerMove.batteryLevel;
+        if (currentLevel >= 4) return;
+
+        int costOfNextUpgrade = batteryUpgradeCosts[currentLevel];
+
+        if (playerInventory.SpendCoins(costOfNextUpgrade))
+        {
+            playerMove.UpgradeBattery();
+            UpdateUI();
+        }
+
     }
     
 
