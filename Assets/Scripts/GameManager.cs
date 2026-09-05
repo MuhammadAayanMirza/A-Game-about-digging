@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public int [] batteryUpgradeCosts = {0, 30, 100, 300};
 
+    public int [] inventoryUpgradeCosts = {0, 30, 100, 300};
+
     [Header("UI Text References")]
     public TextMeshProUGUI coalText;
     public TextMeshProUGUI coinsText;
@@ -28,6 +30,11 @@ public class GameManager : MonoBehaviour
     [Header("Jetpack UI References")]
     public TextMeshProUGUI jetpackLevelText;
     public TextMeshProUGUI jetpackCostText;
+
+    [Header("Inventory UI References")]
+    public TextMeshProUGUI inventoryLevelText;
+    public TextMeshProUGUI inventoryCostText;
+
     [Header("Shovel Progress Bar")]
 
     public Image FirstProgress;
@@ -52,7 +59,13 @@ public class GameManager : MonoBehaviour
     public Image BatThirdProgress;
     public Image BatFourthProgress;
 
-    [Header("Battery UI References")]
+    [Header("Inventory Progress Bar")]
+
+    public Image InFirstProgress;
+    public Image InSecondProgress;
+
+    public Image InThirdProgress;
+    public Image InFourthProgress;
 
     [Header("Battery UI References")]
 
@@ -94,19 +107,28 @@ public class GameManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (playerInventory == null || playerDigging == null) return;
+        if (playerInventory == null || playerDigging == null || playerInventory == null) return;
 
         if (coalText != null) coalText.text = "Coal: " + playerInventory.coalCount;
         if (coinsText != null) coinsText.text = "Balance: " + playerInventory.coins + "M";
 
         if (shovelLevelText != null)
-            shovelLevelText.text = "Shovel Area" + playerDigging.digSizeLevel + "x" + playerDigging.digSizeLevel;
-
+        {
+            if (playerDigging.digSizeLevel >= 4)
+            {
+                shovelLevelText.text = "Max";
+            }
+            else
+            {
+                float nextDigSize = 1 + playerDigging.digSizeLevel;
+                shovelLevelText.text = "  Digs  " + playerDigging.digSizeLevel + "  tiles" + "\n▼" + "\n" + "  Digs  " + nextDigSize + "  tiles";
+            }
+        }
         if (upgradeCostText != null)
         {
             if (playerDigging.digSizeLevel >= 4)
             {
-                upgradeCostText.text = "MAX";
+                upgradeCostText.text = "Max";
             }
             else
             {
@@ -116,7 +138,18 @@ public class GameManager : MonoBehaviour
         }
 
         if (jetpackLevelText != null)
-            jetpackLevelText.text = "Jetpack Level: " + playerMove.jetpackLevel;
+        {
+            float currentJetpackSpeed = playerMove.baseUpMoveSpeed;
+            if (playerMove.jetpackLevel >= 4)
+            {
+                jetpackLevelText.text = "Max";
+            }
+            else
+            {
+                float nextJetpackSpeed = currentJetpackSpeed + playerMove.speedBonusPerLevel;
+                jetpackLevelText.text = currentJetpackSpeed + "  m/s  " + "\n▼" + "\n" + nextJetpackSpeed + "  m/s ";
+            }
+        }
 
         if (jetpackCostText != null)
         {
@@ -132,7 +165,18 @@ public class GameManager : MonoBehaviour
         }
 
         if (batteryLevelText != null)
-        jetpackLevelText.text = "Battery Level: " + playerMove.batteryLevel;
+        {
+            float currentMaxBattery = playerMove.GetMaxBattery();
+            if (playerMove.batteryLevel >= 4)
+            {
+                batteryLevelText.text = currentMaxBattery + "Max";
+            }
+            else
+            {
+                float nextMaxBattery = currentMaxBattery + playerMove.batteryBonusPerLevel;
+                batteryLevelText.text = currentMaxBattery + "  EV" + "\n▼" + "\n" + nextMaxBattery + "  EV";
+            }
+        }
 
         if (batteryCostText != null)
         {
@@ -147,6 +191,35 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
+        if (inventoryLevelText != null)
+        {
+            float currentInventorySize = playerInventory.GetMaxSpace();
+            if (playerInventory.inventorylevel >= 4)
+            {
+                inventoryLevelText.text = currentInventorySize + "Max";
+            }
+            else
+            {
+                float nextInventorySize = currentInventorySize + playerInventory.IncreasePerLevel;
+                inventoryLevelText.text = currentInventorySize + "  Items  " + "\n▼" + "\n" + nextInventorySize + "  Items ";
+            }
+        }
+
+        if (inventoryCostText != null)
+        {
+            if (playerInventory.inventorylevel >= 4)
+            {
+                inventoryCostText.text = "Max";
+            }
+            else
+            {
+                int nextInventoryCost = inventoryUpgradeCosts[playerInventory.inventorylevel];
+                inventoryCostText.text = nextInventoryCost + "M";
+            }
+        }
+        
+        
 
 
 
@@ -209,6 +282,23 @@ public class GameManager : MonoBehaviour
         {
             BatFourthProgress.gameObject.SetActive(true);
         }
+
+         if (playerInventory.inventorylevel >= 1)
+        {
+            InFirstProgress.gameObject.SetActive(true);
+        }
+        if (playerInventory.inventorylevel >= 2)
+        {
+            InSecondProgress.gameObject.SetActive(true);
+        }
+        if (playerInventory.inventorylevel >= 3)
+        {
+            InThirdProgress.gameObject.SetActive(true);
+        }
+        if (playerInventory.inventorylevel >= 4)
+        {
+            InFourthProgress.gameObject.SetActive(true);
+        }
     }
 
     public void ShopSellCoal()
@@ -269,6 +359,24 @@ public class GameManager : MonoBehaviour
         if (playerInventory.SpendCoins(costOfNextUpgrade))
         {
             playerMove.UpgradeBattery();
+            UpdateUI();
+        }
+
+    }
+
+    public void ShopBuyInventoryUpgrade()
+    {
+        if (playerInventory == null) return;
+
+
+        int currentlevel = playerInventory.inventorylevel;
+        if (currentlevel >= 4) return;
+
+        int costOfNextUpgrade = inventoryUpgradeCosts[currentlevel];
+
+        if (playerInventory.SpendCoins(costOfNextUpgrade))
+        {
+            playerInventory.UpgradeInventory();
             UpdateUI();
         }
 

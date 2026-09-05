@@ -191,6 +191,9 @@ public class playerMovements : MonoBehaviour
 
 
         batteryLevel++;
+
+        currentBattery = GetMaxBattery();
+
         Debug.Log("Battery Upgraded to Level: " + batteryLevel);
     }
 
