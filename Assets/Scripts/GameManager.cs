@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     public int [] inventoryUpgradeCosts = {0, 30, 100, 300};
 
+    public int CostOfBatteryRefill = 15;
+
     [Header("UI Text References")]
     public TextMeshProUGUI coalText;
     public TextMeshProUGUI coinsText;
@@ -362,6 +364,20 @@ public class GameManager : MonoBehaviour
             UpdateUI();
         }
 
+    }
+
+    public void ShopBuyBatteryRefill()
+    {
+        if (playerInventory == null || playerMove == null) return;
+
+
+        int costOfBatteryRefill = CostOfBatteryRefill;
+
+        if (playerInventory.SpendCoins(costOfBatteryRefill))
+        {
+            playerMove.RefillBattery();
+            UpdateUI();
+        }
     }
 
     public void ShopBuyInventoryUpgrade()

@@ -207,6 +207,15 @@ public class playerMovements : MonoBehaviour
         BatteryBar.fillAmount = currentBattery / maxBattery;
     }
 
+    public void RefillBattery()
+    {
+        if (BatteryBar == null) return;
+
+        currentBattery = GetMaxBattery();
+        BatteryBar.fillAmount = 1f;
+
+    }
+
 
 
 
