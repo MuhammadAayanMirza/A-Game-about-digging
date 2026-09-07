@@ -8,6 +8,7 @@ public class Digging : MonoBehaviour
 {
     public Tilemap groundTilemap;
     public Tilemap coalTilemap;
+    public Tilemap ironTilemap;
     public float digRange = 2.5f;
 
     public Animator animator;
@@ -61,7 +62,8 @@ public class Digging : MonoBehaviour
     {
         bool hasGround = (groundTilemap != null && groundTilemap.HasTile(cell));
         bool hasCoal = (coalTilemap != null && coalTilemap.HasTile(cell));
-        return hasGround || hasCoal;
+        bool hasIron = (ironTilemap != null && ironTilemap.HasTile(cell));
+        return hasGround || hasCoal || hasIron;
 
     }
 
@@ -160,6 +162,11 @@ public class Digging : MonoBehaviour
         {
             coalTilemap.SetTile(cell, null);
             if (playerInventory != null) playerInventory.AddCoal(1);
+        }
+        if (ironTilemap != null && ironTilemap.HasTile(cell))
+        {
+            ironTilemap.SetTile(cell, null);
+            if (playerInventory != null) playerInventory.AddIron(1);
         }
         if (groundTilemap != null && groundTilemap.HasTile(cell))
         {

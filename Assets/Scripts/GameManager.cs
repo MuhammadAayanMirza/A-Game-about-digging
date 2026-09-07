@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Economy Settings")]
     public int coinValuePerCoal = 10;
+
+    public int coinValuePerIron = 15;
     public int[] upgradeCosts = { 0, 10, 100, 300};
 
     public int [] jetpackUpgradeCosts = {0, 10, 100, 300};
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Text References")]
     public TextMeshProUGUI coalText;
+    public TextMeshProUGUI ironText;
     public TextMeshProUGUI coinsText;
     [Header("Shovel UI References")]
     public TextMeshProUGUI shovelLevelText;
@@ -112,6 +115,9 @@ public class GameManager : MonoBehaviour
         if (playerInventory == null || playerDigging == null || playerInventory == null) return;
 
         if (coalText != null) coalText.text = "Coal: " + playerInventory.coalCount;
+
+        if (ironText != null) ironText.text = "Iron: " + playerInventory.ironCount;
+
         if (coinsText != null) coinsText.text = "Balance: " + playerInventory.coins + "M";
 
         if (shovelLevelText != null)
@@ -310,6 +316,18 @@ public class GameManager : MonoBehaviour
             int earnings = playerInventory.coalCount * coinValuePerCoal;
             playerInventory.coins += earnings;
             playerInventory.coalCount = 0;
+
+            UpdateUI();
+        }
+    }
+
+    public void ShopSellIron()
+    {
+        if (playerInventory.ironCount > 0)
+        {
+            int earnings = playerInventory.ironCount * coinValuePerIron;
+            playerInventory.coins += earnings;
+            playerInventory.ironCount = 0;
 
             UpdateUI();
         }

@@ -2,11 +2,13 @@ using UnityEngine;
 using TMPro;
 using System;
 using Unity.VisualScripting;
+using System.Runtime.InteropServices;
 
 public class PlayerInventory : MonoBehaviour
 {
     [Header("Inventory Data")]
     public int coalCount = 0;
+    public int ironCount = 0;
     public int coins = 0;
 
     [Header("Inventory Space")]
@@ -27,7 +29,7 @@ public class PlayerInventory : MonoBehaviour
 
     public bool AddCoal(int amount)
     {
-       if (coalCount + amount > GetMaxSpace())
+       if (coalCount + ironCount + amount > GetMaxSpace())
        {
             ShowInventoryFullPopup();
             return false;
@@ -43,6 +45,23 @@ public class PlayerInventory : MonoBehaviour
 
     }
 
+    public bool AddIron(int amount)
+    {
+       if (ironCount + coalCount + amount > GetMaxSpace())
+       {
+            ShowInventoryFullPopup();
+            return false;
+       }
+       
+       ironCount += amount;
+
+       if (GameManager.Instance != null)
+       {
+        GameManager.Instance.UpdateUI();
+       }
+       return true;
+
+    }
 
     public bool SpendCoins(int amount)
     {
