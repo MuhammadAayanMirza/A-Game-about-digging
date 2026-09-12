@@ -238,6 +238,7 @@ public class playerMovements : MonoBehaviour
         if(inventory != null)
         {
             inventory.coalCount = 0;
+            inventory.ironCount = 0;
 
             if(GameManager.Instance != null)
             {

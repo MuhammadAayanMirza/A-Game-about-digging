@@ -319,6 +319,12 @@ public class GameManager : MonoBehaviour
 
             UpdateUI();
         }
+
+        TutorialManager tutorialManager = FindAnyObjectByType<TutorialManager>();
+        if (tutorialManager != null)
+        {
+            tutorialManager.OnCoalSold();
+        }
     }
 
     public void ShopSellIron()
@@ -348,7 +354,14 @@ public class GameManager : MonoBehaviour
             playerDigging.digSizeLevel++;
             UpdateUI();
         }
+
+        TutorialManager tutorialManager = FindAnyObjectByType<TutorialManager>();
+        if (tutorialManager != null)
+        {
+            tutorialManager.OnShovelUpgraded();
+        }
     }
+
 
     public void ShopBuyJetpackUpgrade()
     {

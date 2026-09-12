@@ -15,6 +15,7 @@ public class Digging : MonoBehaviour
 
     public SpriteRenderer spriteRenderer;
     private PlayerInventory playerInventory;
+    public TutorialManager tutorialManager;
 
     [Header ("Shovel Toggle") ]
     public GameObject ShovelItem;
@@ -158,20 +159,32 @@ public class Digging : MonoBehaviour
 
     private void BreakSingleTile(Vector3Int cell)
     {
+        bool tileWasBroken = false;
+
         if (coalTilemap != null && coalTilemap.HasTile(cell))
         {
             coalTilemap.SetTile(cell, null);
             if (playerInventory != null) playerInventory.AddCoal(1);
+
+            tileWasBroken = true;
         }
         if (ironTilemap != null && ironTilemap.HasTile(cell))
         {
             ironTilemap.SetTile(cell, null);
             if (playerInventory != null) playerInventory.AddIron(1);
+            tileWasBroken = true;
         }
         if (groundTilemap != null && groundTilemap.HasTile(cell))
         {
             groundTilemap.SetTile(cell, null);
+            tileWasBroken = true;
         }
+
+        if (tileWasBroken && tutorialManager != null)
+        {
+            tutorialManager.OnTileDug();
+        }
+
     }
 
 }
