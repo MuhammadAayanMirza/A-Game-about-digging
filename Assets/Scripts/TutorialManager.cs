@@ -125,7 +125,7 @@ public class TutorialManager : MonoBehaviour
             case TutorialStage.Dig:
                 ShowTutorial(
                     "Let's Dig",
-                    "Move next to a dirt tile and left click to dig."
+                    "Move to the bottom of the cobble and left click to dig."
                 );
                 break;
 
