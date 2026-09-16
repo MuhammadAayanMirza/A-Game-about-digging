@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.Splines;
 
 public class playerMovements : MonoBehaviour
 {
@@ -41,6 +42,14 @@ public class playerMovements : MonoBehaviour
    private Vector3 startingPositon;
 
    private bool isDead = false;
+   private bool isPlayingJetpackSound = false;
+
+   AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }   
     
     void Start()
     {
@@ -76,6 +85,7 @@ public class playerMovements : MonoBehaviour
 
       void Update()
     {
+
         inputMovement = Vector2.zero;
 
 
@@ -105,9 +115,11 @@ public class playerMovements : MonoBehaviour
         
     
     float currentXVelocity = inputMovement.x * moveSpeed;
-        float currentYVelocity = inputMovement.y * moveSpeed;
+    float currentYVelocity = inputMovement.y * moveSpeed;
 
-        bool jetpackIsActive = isInJetpackZone && isHoldingUpKey; 
+
+     bool jetpackIsActive = isInJetpackZone && isHoldingUpKey; 
+
         if (jetpackIsActive)
     
         {
@@ -122,6 +134,12 @@ public class playerMovements : MonoBehaviour
         if(currentBattery <= 0)
             {
                 currentBattery = 0;
+
+            if(isPlayingJetpackSound)
+            {
+                audioManager.StopJetpackSFX();
+                isPlayingJetpackSound = false;
+            }
 
             if (!isDead)
             {
@@ -147,6 +165,23 @@ public class playerMovements : MonoBehaviour
             }
 
         _animator.SetBool("Jetpack", jetpackIsActive);
+
+        if (jetpackIsActive)
+        {
+            if(!isPlayingJetpackSound)
+            {
+                audioManager.StartJetpackSFX();
+                isPlayingJetpackSound = true;
+            }
+        }
+        else
+        {
+            if(isPlayingJetpackSound)
+            {
+                audioManager.StopJetpackSFX();
+                isPlayingJetpackSound = false;
+            }
+        }
 
         rb.linearVelocity = new Vector2(currentXVelocity, currentYVelocity);
 
@@ -270,4 +305,5 @@ public class playerMovements : MonoBehaviour
         Debug.Log("You are back! Don't Die Now Oloo");
 
     }
+
 }

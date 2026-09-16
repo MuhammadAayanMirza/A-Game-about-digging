@@ -26,7 +26,13 @@ public class Digging : MonoBehaviour
     public bool IsDigging { get; private set; }
 
     private Vector3 startingPos;
+    AudioManager audioManager;
 
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }   
+    
     void Start()
     {
         startingPos = transform.localScale;
@@ -84,6 +90,7 @@ public class Digging : MonoBehaviour
         {
 
             IsDigging = true;
+            audioManager.PlaySFX(audioManager.Digging);
 
             FaceDirection(tileCenter);
 
