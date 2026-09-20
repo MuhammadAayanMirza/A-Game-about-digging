@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 public class AudioManager : MonoBehaviour
 {
@@ -22,7 +23,9 @@ public class AudioManager : MonoBehaviour
     {
         MusicSource.clip = Background;
         MusicSource.Play();
+
     }
+    
 
     public void PlaySFX(AudioClip clip)
     {
