@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 112}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 17943
+  controlID: 19413
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 17944
+  controlID: 19414
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 56}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 17945
+  controlID: 19415
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -254,10 +254,13 @@ MonoBehaviour:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs:
-      - m_rawData: 568105584918867964
+      - m_rawData: 568105584918903420
       m_LastClickedID:
-        m_rawData: 0
+        m_rawData: 568105584918903420
       m_ExpandedIDs:
+      - m_rawData: 568105589213710364
+      - m_rawData: 568105589213710576
+      - m_rawData: 568105589213711274
       - m_rawData: 568105589213712720
       - m_rawData: 568105589213713034
       - m_rawData: 568105589213713354
@@ -815,7 +818,7 @@ MonoBehaviour:
       sizeOverridden: 0
     - dockPosition: 1
       containerId: overlay-container--right
-      displayed: 0
+      displayed: 1
       id: Scene View/Tilemap Focus
       index: 0
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
@@ -944,7 +947,7 @@ MonoBehaviour:
   m_Position:
     m_Target: {x: 18.16324, y: 10.221168, z: 0.48579985}
     speed: 2
-    m_Value: {x: 18.169008, y: 10.22075, z: 0.48589656}
+    m_Value: {x: 18.16324, y: 10.221168, z: 0.48579985}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -997,7 +1000,7 @@ MonoBehaviour:
   m_Size:
     m_Target: 6.4562755
     speed: 2
-    m_Value: 6.4466057
+    m_Value: 6.4562755
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -2152,10 +2155,10 @@ MonoBehaviour:
     m_ImportLogFlags: 0
     m_FilterByTypeIntersection: 0
   m_ViewMode: 1
-  m_StartGridSize: 88
+  m_StartGridSize: 81
   m_LastFolders:
   - Assets/Scenes
-  m_LastFoldersGridSize: 88
+  m_LastFoldersGridSize: 81
   m_LastProjectPath: /Users/muhammadaayanmirza/Desktop/Unity Games/Game gam
   m_LockTracker:
     m_IsLocked: 0
@@ -2232,10 +2235,10 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_rawData: 568105584918867964
+    - m_rawData: 568105584918903420
     m_LastClickedEntityId:
-      m_rawData: 568105584918867964
-    m_HadKeyboardFocusLastEvent: 1
+      m_rawData: 568105584918903420
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918902496
     m_RenameOverlay:
@@ -2265,7 +2268,7 @@ MonoBehaviour:
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
-    m_GridSize: 88
+    m_GridSize: 81
   m_SkipHiddenPackages: 1
   m_DirectoriesAreaWidth: 149
 --- !u!114 &16
