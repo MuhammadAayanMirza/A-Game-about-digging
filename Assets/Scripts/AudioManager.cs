@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AudioManager : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class AudioManager : MonoBehaviour
  public AudioClip Digging;
  public AudioClip PopUp;
  public AudioClip Jetpack;
+ public AudioClip SellButton;
+ public AudioClip UpgradeButton;
+
 
     private void Start()
     {
@@ -41,4 +46,16 @@ public class AudioManager : MonoBehaviour
             JetpackSource.Stop();
         }
     }
+
+    public void sellButton()
+    {
+        PlaySFX(SellButton);
+    }
+
+    public void upgradeButton()
+    {
+        PlaySFX(UpgradeButton);
+    }
+
 }
+
