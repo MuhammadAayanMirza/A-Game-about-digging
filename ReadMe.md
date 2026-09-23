@@ -5,6 +5,8 @@
  A Digging Game where your goal is to reach the bottom
  of the world by upgrading your tools using minerals that you'll find on the way.
 
+ (Submission for Stardance, a Hackclub event)
+
  Play it here: https://muhammadaayanmirza.itch.io/the-last-dig
 
  ### Controls:
